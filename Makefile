@@ -135,3 +135,15 @@ refresh-dumps: discord-export clean-db clean-dumps dumps
 .PHONY: refresh-push-dumps
 refresh-push-dumps: refresh-dumps commit-sql-dump
 	$(GIT) push
+
+#######
+# SQLC
+
+sqlc-ts: go.mod go.sum
+	$(GO) build -v -mod=mod github.com/stephen/sqlc-ts
+
+.PHONY: sqlc
+sqlc: sqlc.yml $(wildcard sql/queries/*.sql) sqlc-ts
+	$(GO) run -v -mod=mod github.com/sqlc-dev/sqlc/cmd/sqlc generate
+
+

@@ -1,0 +1,81 @@
+@use "@fontsource/alef";
+@use "@fontsource/quicksand";
+
+$rr-bg: #24262d;
+$rr-fg: #ffffff;
+$rr-primary: #df8319;
+$rr-gold: #e2a11e;
+$rr-silver: #bdc3c7;
+$rr-MBlack: #121214;
+$rr-BBlack: #000000;
+$rr-white: #ffffff;
+
+// Path to Bulma's sass folder
+@use "bulma/sass/utilities" with ($family-primary: '"Alef", sans-serif',
+  $primary: $rr-primary,
+  $link: $rr-primary,
+  $scheme-main: $rr-bg,
+  $text: $rr-fg,
+);
+
+// Override Sass variables from the /form folder
+@use "bulma/sass/form" with ($input-shadow: none);
+
+// Import the components you need
+@forward "bulma/sass/base";
+@forward "bulma/sass/components/breadcrumb";
+@forward "bulma/sass/components/card";
+@forward "bulma/sass/components/dropdown";
+@forward "bulma/sass/components/menu";
+@forward "bulma/sass/components/message";
+@forward "bulma/sass/components/modal";
+@forward "bulma/sass/components/navbar";
+@forward "bulma/sass/components/pagination";
+@forward "bulma/sass/components/panel";
+@forward "bulma/sass/components/tabs";
+@forward "bulma/sass/elements/block";
+@forward "bulma/sass/elements/box";
+@forward "bulma/sass/elements/button";
+@forward "bulma/sass/elements/content";
+@forward "bulma/sass/elements/delete";
+@forward "bulma/sass/elements/icon";
+@forward "bulma/sass/elements/image";
+@forward "bulma/sass/elements/loader";
+@forward "bulma/sass/elements/notification";
+@forward "bulma/sass/elements/progress";
+@forward "bulma/sass/elements/table";
+@forward "bulma/sass/elements/tag";
+@forward "bulma/sass/elements/title";
+@forward "bulma/sass/form/shared";
+@forward "bulma/sass/form/input-textarea";
+@forward "bulma/sass/form/checkbox-radio";
+@forward "bulma/sass/form/select";
+@forward "bulma/sass/form/file";
+@forward "bulma/sass/form/tools";
+@forward "bulma/sass/grid/columns";
+@forward "bulma/sass/grid/grid";
+@forward "bulma/sass/layout/container";
+@forward "bulma/sass/layout/footer";
+@forward "bulma/sass/layout/hero";
+@forward "bulma/sass/layout/level";
+@forward "bulma/sass/layout/media";
+@forward "bulma/sass/layout/section";
+
+// Import the themes so that all CSS variables have a value
+@forward "bulma/sass/themes";
+
+@import "defs";
+
+* {
+  scrollbar-color: #454a4d #202324;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

@@ -1,0 +1,91 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy frontend to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main", "web"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # SQLite DB job
+  db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install sqlite3
+        run: sudo apt-get install --no-install-recommends -y sqlite3
+      - name: Generate database from SQL dump
+        run: mkdir -p db && sqlite3 db/main.db -init sql/all.sql
+      - name: Share artifact inside workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: db
+          path: db/
+
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+      - name: Install dependencies
+        working-directory: ./web/sqlite
+        run: npm install
+      # - name: Test
+      #   working-directory: ./web/sqlite
+      #   run: npm test
+      #   env:
+      #     CI: true
+      - name: Generate build
+        working-directory: ./web/sqlite
+        run: npm run build
+      - name: Share artifact inside workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: web/sqlite/build/
+
+  # Deployment job
+  deploy:
+    runs-on: ubuntu-latest
+    # When application is successfully tested and build has been generated
+    # Then we can start with deployment
+    needs: [build, db]
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: db
+          path: db/
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-build
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
